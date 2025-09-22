@@ -17,8 +17,17 @@
       "feedback": "My favorite is grey - why is this not an option?!",
       "submissionDate": "22/09/2025",
       "submissionTime": "4:26:56 pm"
+    },
+    {
+      "id": "1758522720123-r0gguixsk",
+      "timestamp": "2025-09-22T06:32:00.123Z",
+      "name": "Thomas Amann",
+      "favoriteColor": "Orange",
+      "feedback": "Orange is actually a new favourite colour for me",
+      "submissionDate": "22/09/2025",
+      "submissionTime": "4:32:00 pm"
     }
   ],
-  "lastUpdated": "2025-09-22T06:26:56.467Z",
-  "totalResponses": 2
+  "lastUpdated": "2025-09-22T06:32:00.805Z",
+  "totalResponses": 3
 }
