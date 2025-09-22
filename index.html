@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub JSON Updater - Hello World</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 2rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .config-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .config-help {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .submit-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .status.loading {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border: 1px solid #93c5fd;
+        }
+
+        .small-text {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 16px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GitHub JSON Updater</h1>
+        <p class="subtitle">Hello World Example - Add responses to a JSON file</p>
+
+        <form id="responseForm">
+            <div class="config-section">
+                <div class="config-title">GitHub Configuration</div>
+                
+                <div class="form-group">
+                    <label for="githubToken">GitHub Personal Access Token <span class="required">*</span></label>
+                    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required>
+                    <div class="config-help">Create a token at GitHub → Settings → Developer settings → Personal access tokens (classic)</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="yourName">Your Name <span class="required">*</span></label>
+                <input type="text" id="yourName" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="favoriteColor">What's your favorite color? <span class="required">*</span></label>
+                <select id="favoriteColor" required>
+                    <option value="">Select a color</option>
+                    <option value="Red">Red</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Green">Green</option>
+                    <option value="Purple">Purple</option>
+                    <option value="Orange">Orange</option>
+                    <option value="Yellow">Yellow</option>
+                    <option value="Pink">Pink</option>
+                    <option value="Black">Black</option>
+                    <option value="White">White</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="feedback">Any additional feedback?</label>
+                <textarea id="feedback" placeholder="Optional: Share any thoughts or suggestions..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Submit Response
+            </button>
+        </form>
+
+        <div id="status"></div>
+
+        <div class="small-text">
+            <strong>Setup Instructions:</strong><br>
+            1. Create a GitHub repository<br>
+            2. Generate a Personal Access Token with "repo" permissions<br>
+            3. Update the hardcoded repository details in the JavaScript (lines 115-117)<br>
+            4. Everyone uses the same form to add responses to the single JSON file
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('responseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const statusDiv = document.getElementById('status');
+            
+            // Hardcoded repository configuration
+document.getElementById('githubToken').value = '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';
+            const repoOwner = 'Brendan12-IPAV';  // CHANGE THIS to your GitHub username
+            const repoName = 'HelloJASON';   // CHANGE THIS to your repository name
+            const fileName = 'responsesFromTrial.json';   // Single file for all responses
+            
+            // Get form values
+            const githubToken = document.getElementById('githubToken').value;
+            const yourName = document.getElementById('yourName').value;
+            const favoriteColor = document.getElementById('favoriteColor').value;
+            const feedback = document.getElementById('feedback').value;
+
+            // Validate required fields
+            if (!githubToken || !yourName || !favoriteColor) {
+                showStatus('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            showStatus('Submitting response...', 'loading');
+
+            try {
+                // Create the new response object
+                const newResponse = {
+                    id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    timestamp: new Date().toISOString(),
+                    name: yourName,
+                    favoriteColor: favoriteColor,
+                    feedback: feedback || null,
+                    submissionDate: new Date().toLocaleDateString(),
+                    submissionTime: new Date().toLocaleTimeString()
+                };
+
+                // Try to get existing file content
+                let existingData = { responses: [] };
+                let fileSha = null;
+
+                try {
+                    const getResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${fileName}`, {
+                        headers: {
+                            'Authorization': `token ${githubToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+
+                    if (getResponse.ok) {
+                        const fileData = await getResponse.json();
+                        fileSha = fileData.sha;
+                        const content = atob(fileData.content);
+                        existingData = JSON.parse(content);
+                    }
+                } catch (error) {
+                    console.log('File does not exist yet, will create new one');
+                }
+
+                // Add new response to existing data
+                existingData.responses = existingData.responses || [];
+                existingData.responses.push(newResponse);
+                existingData.lastUpdated = new Date().toISOString();
+                existingData.totalResponses = existingData.responses.length;
+
+                // Convert to base64
+                const updatedContent = btoa(JSON.stringify(existingData, null, 2));
+
+                // Update file on GitHub
+                const updatePayload = {
+                    message: `Add response from ${yourName}`,
+                    content: updatedContent,
+                    branch: 'main'
+                };
+
+                if (fileSha) {
+                    updatePayload.sha = fileSha;
+                }
+
+                const updateResponse = await fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${fileName}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${githubToken}`,
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                if (updateResponse.ok) {
+                    showStatus(`Success! Your response has been added to ${fileName}`, 'success');
+                    
+                    // Clear form (except GitHub config)
+                    document.getElementById('yourName').value = '';
+                    document.getElementById('favoriteColor').value = '';
+                    document.getElementById('feedback').value = '';
+                } else {
+                    const errorData = await updateResponse.json();
+                    throw new Error(errorData.message || 'Failed to update file');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+    </script>
+</body>
+</html>
